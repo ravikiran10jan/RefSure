@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:refsure/core/models/app_user.dart';
+import 'package:refsure/core/router/route_names.dart';
 import 'package:refsure/core/models/referral_badge.dart';
 import 'package:refsure/design_system/atoms/org_badge.dart';
 import 'package:refsure/design_system/atoms/skill_chip.dart';
@@ -19,7 +20,7 @@ class ProviderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SectionCard(
-    onTap: () => context.push('/providers/${provider.id}'),
+    onTap: () => context.push(RouteNames.providerDetailPath(provider.id)),
     child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
         UserAvatar(name: provider.name, photoUrl: provider.photoUrl, size: 48),

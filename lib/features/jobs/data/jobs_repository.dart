@@ -7,9 +7,8 @@ import 'package:refsure/services/firestore_service.dart';
 import 'package:refsure/services/match_engine.dart';
 
 class JobsRepository {
-  JobsRepository(this._db, this._matchEngine);
+  JobsRepository(this._db);
   final FirestoreService _db;
-  final MatchEngine _matchEngine;
 
   Stream<List<Job>> watchActiveJobs() => _db.watchActiveJobs();
 

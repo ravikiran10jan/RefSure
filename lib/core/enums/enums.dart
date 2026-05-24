@@ -21,6 +21,8 @@ enum ReferralBadgeTier { bronze, silver, gold, diamond, platinum }
 
 enum JobSource { manual, careersPortal }
 
+enum AtsPlatform { greenhouse, lever, bamboohr, workday, unknown }
+
 enum JobSortBy { matchScore, recent, hotFirst }
 
 enum LeaderboardSort { referrals, gratitudes }

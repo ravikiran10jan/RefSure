@@ -61,7 +61,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    backgroundColor: Colors.white,
+    backgroundColor: AppColors.bg,
     appBar: AppBar(
       title: const Text('Set up your profile'),
       leading: _step == 1
@@ -291,7 +291,7 @@ class _RoleCard extends StatelessWidget {
     child: Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: selected ? AppColors.primaryLight : Colors.white,
+        color: selected ? AppColors.primaryLight : AppColors.surface,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: selected ? AppColors.primary : AppColors.border,
@@ -300,7 +300,7 @@ class _RoleCard extends StatelessWidget {
         Container(
           width: 44, height: 44,
           decoration: BoxDecoration(
-            color: selected ? Colors.white : AppColors.primaryLight,
+            color: selected ? AppColors.surface : AppColors.primaryLight,
             borderRadius: BorderRadius.circular(12)),
           alignment: Alignment.center,
           child: Icon(icon, size: 22, color: AppColors.primary)),
@@ -337,7 +337,7 @@ class _CvUploadTile extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
         decoration: BoxDecoration(
-          color: hasFile ? AppColors.emeraldLight : Colors.white,
+          color: hasFile ? AppColors.emeraldLight : AppColors.surface,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
             color: hasFile ? AppColors.emerald.withOpacity(0.4)

@@ -40,8 +40,9 @@ ThemeData buildAppTheme() {
   return ThemeData(
     useMaterial3: true,
     colorScheme: colorScheme,
-    scaffoldBackgroundColor: Colors.white,
-    canvasColor: Colors.white,
+    // #F4FAF8 — faint green canvas so white cards read as elevated
+    scaffoldBackgroundColor: AppColors.bg,
+    canvasColor: AppColors.bg,
     splashFactory: InkRipple.splashFactory,
 
     textTheme: GoogleFonts.interTextTheme().apply(
@@ -49,31 +50,35 @@ ThemeData buildAppTheme() {
       displayColor: AppColors.textPrimary,
     ),
 
+    // ── AppBar — Groww signature green ──────────────────────────
     appBarTheme: AppBarTheme(
-      backgroundColor: Colors.white,
-      foregroundColor: AppColors.textPrimary,
+      backgroundColor: AppColors.primary,
+      foregroundColor: Colors.white,
       elevation: 0,
       scrolledUnderElevation: 0,
-      shadowColor: AppColors.border,
-      surfaceTintColor: Colors.white,
+      shadowColor: AppColors.primaryDark,
+      surfaceTintColor: AppColors.primary,
       centerTitle: false,
-      iconTheme: const IconThemeData(color: AppColors.textPrimary),
+      iconTheme: const IconThemeData(color: Colors.white),
+      actionsIconTheme: const IconThemeData(color: Colors.white),
       titleTextStyle: GoogleFonts.inter(
-        fontSize: 17, fontWeight: FontWeight.w700, color: AppColors.textPrimary,
+        fontSize: 17, fontWeight: FontWeight.w700, color: Colors.white,
       ),
     ),
 
+    // ── Cards — white surface, green border, 12 px radius ───────
     cardTheme: CardThemeData(
       color: Colors.white,
       surfaceTintColor: Colors.white,
       elevation: 0,
       margin: EdgeInsets.zero,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppRadius.md),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
         side: const BorderSide(color: AppColors.border, width: 1),
       ),
     ),
 
+    // ── Input — light green fill on focus ───────────────────────
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: Colors.white,
@@ -100,6 +105,7 @@ ThemeData buildAppTheme() {
       suffixIconColor: AppColors.textHint,
     ),
 
+    // ── Buttons ─────────────────────────────────────────────────
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primary,
@@ -126,6 +132,7 @@ ThemeData buildAppTheme() {
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
         foregroundColor: AppColors.primary,
+        backgroundColor: Colors.white,
         side: const BorderSide(color: AppColors.primary),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.pill)),
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
@@ -150,6 +157,7 @@ ThemeData buildAppTheme() {
       color: AppColors.divider, thickness: 1, space: 1,
     ),
 
+    // ── Bottom navigation — white bar, green selected item ──────
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       backgroundColor: Colors.white,
       selectedItemColor: AppColors.primary,

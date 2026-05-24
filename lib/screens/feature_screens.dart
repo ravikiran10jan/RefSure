@@ -6,6 +6,9 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import '../core/router/route_names.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../core/utils/test_data_seeder.dart';
 import '../models/models.dart';
 import '../providers/app_provider.dart';
 import '../screens/match_detail_screen.dart';
@@ -44,7 +47,7 @@ class _ApplicationsScreenState extends State<ApplicationsScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('My Applications')),
       body: Column(children: [
-        Container(color: Colors.white,
+        Container(color: AppColors.surface,
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -57,7 +60,7 @@ class _ApplicationsScreenState extends State<ApplicationsScreen> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                     decoration: BoxDecoration(
-                      color: on ? AppColors.primary : Colors.white,
+                      color: on ? AppColors.primary : AppColors.surface,
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(color: on ? AppColors.primary : AppColors.border)),
                     child: Text('${t.$2} ($cnt)', style: GoogleFonts.inter(
@@ -65,7 +68,7 @@ class _ApplicationsScreenState extends State<ApplicationsScreen> {
                       color: on ? Colors.white : AppColors.textSecond)))));
             }).toList()))),
         // ── Summary strip ────────────────────────────────────
-        Container(color: Colors.white,
+        Container(color: AppColors.surface,
           padding: const EdgeInsets.symmetric(vertical: 12),
           child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
             _Strip('${all.where((a) => a.status == AppStatus.strongMatch).length}',
@@ -232,6 +235,47 @@ class _OverviewTab extends StatelessWidget {
       ])),
 
       const SizedBox(height: 16),
+      // ── Careers Portal shortcut ────────────────────────────
+      GestureDetector(
+        onTap: () => context.push(RouteNames.careersPortal),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [AppColors.primary, AppColors.accent],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            ),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Row(children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(Icons.travel_explore_outlined,
+                color: Colors.white, size: 20),
+            ),
+            const SizedBox(width: 12),
+            Expanded(child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text('Fetch Open Jobs from Careers Portal',
+                style: GoogleFonts.inter(
+                  fontSize: 13, fontWeight: FontWeight.w700,
+                  color: Colors.white)),
+              Text('Auto-detect Greenhouse, Lever, BambooHR, Workday',
+                style: GoogleFonts.inter(
+                  fontSize: 11, color: Colors.white70)),
+            ])),
+            const Icon(Icons.arrow_forward_ios,
+              size: 14, color: Colors.white70),
+          ]),
+        ),
+      ),
+
+      const SizedBox(height: 16),
       SectionHeader(title: 'Top Candidates',
         action: TextButton(onPressed: () {},
           child: const Text('View all'))),
@@ -279,7 +323,7 @@ class _CandidatesTabState extends State<_CandidatesTab> {
 
     return Column(children: [
       // Filter chips
-      Container(color: Colors.white,
+      Container(color: AppColors.surface,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
@@ -320,7 +364,7 @@ class _FilterTab extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
         decoration: BoxDecoration(
-          color: on ? AppColors.primary : Colors.white,
+          color: on ? AppColors.primary : AppColors.surface,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: on ? AppColors.primary : AppColors.border)),
         child: Text(label, style: GoogleFonts.inter(
@@ -588,7 +632,7 @@ class _MyJobsTab extends StatelessWidget {
         ..sort((a, b) => b.postedAt.compareTo(a.postedAt));
 
     return Column(children: [
-      Container(color: Colors.white,
+      Container(color: AppColors.surface,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         child: Row(children: [
           Text('${jobs.length} jobs posted', style: GoogleFonts.inter(
@@ -798,7 +842,7 @@ class _ManualPostFormState extends State<_ManualPostForm> {
           label: Text(s), selected: on,
           onSelected: (_) => setState(() => on ? _skills.remove(s) : _skills.add(s)),
           selectedColor: AppColors.primary, checkmarkColor: Colors.white,
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.surface,
           side: BorderSide(color: on ? AppColors.primary : AppColors.border),
           labelStyle: GoogleFonts.inter(
             color: on ? Colors.white : AppColors.textSecond, fontSize: 12));
@@ -819,7 +863,7 @@ class _ManualPostFormState extends State<_ManualPostForm> {
           label: Text('#$t'), selected: on,
           onSelected: (_) => setState(() => on ? _tags.remove(t) : _tags.add(t)),
           selectedColor: AppColors.accent, checkmarkColor: Colors.white,
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.surface,
           side: BorderSide(color: on ? AppColors.accent : AppColors.border),
           labelStyle: GoogleFonts.inter(
             color: on ? Colors.white : AppColors.textSecond, fontSize: 12));
@@ -998,7 +1042,7 @@ class _CareersPortalImportState extends State<_CareersPortalImport> {
             margin: const EdgeInsets.only(bottom: 8),
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: on ? AppColors.primaryLight : Colors.white,
+              color: on ? AppColors.primaryLight : AppColors.surface,
               borderRadius: BorderRadius.circular(8),
               border: Border.all(color: on ? AppColors.primary : AppColors.border,
                 width: on ? 2 : 1)),
@@ -1206,6 +1250,11 @@ class ProfileScreen extends StatelessWidget {
             minimumSize: const Size.fromHeight(48))),
 
         const SizedBox(height: 24),
+
+        // ── Developer section ─────────────────────────────────
+        _DeveloperSection(userId: user.id),
+
+        const SizedBox(height: 24),
       ]),
     );
   }
@@ -1261,6 +1310,103 @@ class ProfileScreen extends StatelessWidget {
   }
 }
 
+// ════════════════════════════════════════════════════════════════
+// DEVELOPER SECTION  (seed test data)
+// ════════════════════════════════════════════════════════════════
+class _DeveloperSection extends StatefulWidget {
+  final String userId;
+  const _DeveloperSection({required this.userId});
+  @override
+  State<_DeveloperSection> createState() => _DeveloperSectionState();
+}
+
+class _DeveloperSectionState extends State<_DeveloperSection> {
+  bool _seeding  = false;
+  String? _msg;
+
+  Future<void> _seed() async {
+    setState(() { _seeding = true; _msg = null; });
+    try {
+      await TestDataSeeder.seed(FirebaseFirestore.instance, currentUserId: widget.userId);
+      if (!mounted) return;
+      setState(() => _msg = 'Seed data written — reload the app to see all screens populated.');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('✓ Test data seeded successfully'),
+          behavior: SnackBarBehavior.floating,
+          duration: Duration(seconds: 3),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _msg = 'Error: $e');
+    } finally {
+      if (mounted) setState(() => _seeding = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => SectionCard(
+    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Row(children: [
+        Container(
+          width: 32, height: 32,
+          decoration: BoxDecoration(
+            color: AppColors.amberLight,
+            borderRadius: BorderRadius.circular(8)),
+          alignment: Alignment.center,
+          child: const Icon(Icons.science_outlined,
+            size: 17, color: AppColors.amber)),
+        const SizedBox(width: 10),
+        Text('Developer', style: GoogleFonts.inter(
+          fontSize: 13, fontWeight: FontWeight.w700,
+          color: AppColors.amber)),
+      ]),
+      const SizedBox(height: 8),
+      Text(
+        'Populate Firestore with realistic QA data — 5 referrers, '
+        '6 jobs, 4 applications with varied statuses, a leaderboard, '
+        'and 3 gratitude messages. Safe to run once; already-seeded '
+        'data is skipped.',
+        style: GoogleFonts.inter(
+          fontSize: 12, color: AppColors.textSecond, height: 1.4)),
+      const SizedBox(height: 12),
+      SizedBox(
+        width: double.infinity,
+        child: OutlinedButton.icon(
+          onPressed: _seeding ? null : _seed,
+          icon: _seeding
+              ? const SizedBox(
+                  width: 14, height: 14,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2, color: AppColors.amber))
+              : const Icon(Icons.play_circle_outline,
+                  size: 16, color: AppColors.amber),
+          label: Text(
+            _seeding ? 'Seeding…' : 'Seed Test Data',
+            style: GoogleFonts.inter(
+              fontSize: 13, fontWeight: FontWeight.w600,
+              color: AppColors.amber)),
+          style: OutlinedButton.styleFrom(
+            side: const BorderSide(color: AppColors.amber),
+            padding: const EdgeInsets.symmetric(vertical: 12)))),
+      if (_msg != null) ...[
+        const SizedBox(height: 8),
+        Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: _msg!.startsWith('Error')
+                ? AppColors.redLight : AppColors.emeraldLight,
+            borderRadius: BorderRadius.circular(6)),
+          child: Text(_msg!, style: GoogleFonts.inter(
+            fontSize: 11, height: 1.4,
+            color: _msg!.startsWith('Error')
+                ? AppColors.red : AppColors.emerald))),
+      ],
+    ]),
+  );
+}
+
 class _RoleSwitcherCard extends StatelessWidget {
   final UserRole activeRole;
   final ValueChanged<UserRole> onSwitch;
@@ -1308,7 +1454,7 @@ class _RoleToggle extends StatelessWidget {
     child: Container(
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
       decoration: BoxDecoration(
-        color: selected ? AppColors.primaryLight : Colors.white,
+        color: selected ? AppColors.primaryLight : AppColors.surface,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
           color: selected ? AppColors.primary : AppColors.border,
@@ -1498,7 +1644,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     margin: const EdgeInsets.only(bottom: 8),
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                     decoration: BoxDecoration(
-                      color: mine ? AppColors.primary : Colors.white,
+                      color: mine ? AppColors.primary : AppColors.surface,
                       borderRadius: BorderRadius.circular(16).copyWith(
                         bottomRight: mine ? const Radius.circular(4) : null,
                         bottomLeft:  mine ? null : const Radius.circular(4)),
@@ -1517,7 +1663,7 @@ class _ChatScreenState extends State<ChatScreen> {
           padding: EdgeInsets.only(
             left: 16, right: 8, top: 10,
             bottom: MediaQuery.of(context).viewInsets.bottom + 10),
-          decoration: const BoxDecoration(color: Colors.white,
+          decoration: const BoxDecoration(color: AppColors.surface,
             border: Border(top: BorderSide(color: AppColors.border))),
           child: Row(children: [
             Expanded(child: TextField(controller: _ctrl, maxLines: null,

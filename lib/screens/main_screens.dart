@@ -29,25 +29,25 @@ class HomeScreen extends StatelessWidget {
       backgroundColor: AppColors.bg,
       body: CustomScrollView(slivers: [
         SliverAppBar(
-          floating: true, backgroundColor: Colors.white, surfaceTintColor: Colors.white,
+          floating: true, backgroundColor: AppColors.primary, surfaceTintColor: AppColors.primary,
           elevation: 0, scrolledUnderElevation: 1,
           title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text('Hello, ${user.name.split(' ').first}', style: GoogleFonts.inter(
-              fontSize: 18, fontWeight: FontWeight.w800, color: AppColors.textPrimary)),
+              fontSize: 18, fontWeight: FontWeight.w800, color: Colors.white)),
             Text('Where real referrals happen', style: GoogleFonts.inter(
-              fontSize: 11, color: AppColors.textHint)),
+              fontSize: 11, color: Colors.white70)),
           ]),
           actions: [
             IconButton(
               tooltip: 'Messages',
               onPressed: () => context.push('/messages'),
               icon: const Icon(Icons.chat_bubble_outline,
-                color: AppColors.textPrimary)),
+                color: Colors.white)),
             IconButton(
               tooltip: 'Notifications',
               onPressed: () => context.push('/notifications'),
               icon: Stack(children: [
-                const Icon(Icons.notifications_outlined, color: AppColors.textPrimary),
+                const Icon(Icons.notifications_outlined, color: Colors.white),
                 if (prov.unreadCount > 0) Positioned(right: 0, top: 0,
                   child: Container(width: 8, height: 8,
                     decoration: const BoxDecoration(color: AppColors.red, shape: BoxShape.circle))),
@@ -149,7 +149,7 @@ class _SearchBar extends StatelessWidget {
     child: Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
-        color: Colors.white, borderRadius: BorderRadius.circular(10),
+        color: AppColors.surface, borderRadius: BorderRadius.circular(10),
         border: Border.all(color: AppColors.border)),
       child: Row(children: [
         const Icon(Icons.search, color: AppColors.primary, size: 20),
@@ -258,7 +258,7 @@ class _QuickActionTile extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) => Material(
-    color: Colors.white,
+    color: AppColors.surface,
     borderRadius: BorderRadius.circular(10),
     child: InkWell(
       borderRadius: BorderRadius.circular(10),
@@ -292,7 +292,7 @@ class _EmptyMini extends StatelessWidget {
   Widget build(BuildContext context) => Container(
     padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
     decoration: BoxDecoration(
-      color: Colors.white, borderRadius: BorderRadius.circular(8),
+      color: AppColors.surface, borderRadius: BorderRadius.circular(8),
       border: Border.all(color: AppColors.border)),
     alignment: Alignment.center,
     child: Text(text, style: GoogleFonts.inter(
@@ -481,7 +481,7 @@ class _JobsScreenState extends State<JobsScreen> {
       appBar: AppBar(title: const Text('Jobs')),
       body: Column(children: [
         Container(
-          color: Colors.white,
+          color: AppColors.surface,
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
           child: Column(children: [
             TextField(controller: _q, onChanged: (v) {
@@ -623,7 +623,7 @@ class _FilterDropdown<T> extends StatelessWidget {
   Widget build(BuildContext context) => Container(
     padding: const EdgeInsets.symmetric(horizontal: 12),
     decoration: BoxDecoration(
-      color: Colors.white, borderRadius: BorderRadius.circular(10),
+      color: AppColors.surface, borderRadius: BorderRadius.circular(10),
       border: Border.all(color: AppColors.border)),
     child: DropdownButtonHideUnderline(
       child: DropdownButton<T>(
@@ -679,7 +679,7 @@ class _ToggleChip extends StatelessWidget {
     child: Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: selected ? AppColors.primary : Colors.white,
+        color: selected ? AppColors.primary : AppColors.surface,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
           color: selected ? AppColors.primary : AppColors.border)),
@@ -701,7 +701,7 @@ class _AdvancedFiltersButton extends StatelessWidget {
   const _AdvancedFiltersButton({required this.badge, required this.onTap});
   @override
   Widget build(BuildContext context) => Material(
-    color: Colors.white,
+    color: AppColors.surface,
     borderRadius: BorderRadius.circular(10),
     child: InkWell(
       onTap: onTap,
@@ -1007,7 +1007,7 @@ class JobDetailScreen extends StatelessWidget {
       bottomNavigationBar: SafeArea(
         child: Container(
           padding: const EdgeInsets.all(16),
-          decoration: const BoxDecoration(color: Colors.white,
+          decoration: const BoxDecoration(color: AppColors.surface,
             border: Border(top: BorderSide(color: AppColors.border))),
           child: myApp.id.isNotEmpty
               ? Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -1123,14 +1123,14 @@ class _ProvidersScreenState extends State<ProvidersScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Referrers')),
       body: Column(children: [
-        Container(color: Colors.white,
+        Container(color: AppColors.surface,
           padding: const EdgeInsets.fromLTRB(16,8,16,10),
           child: TextField(controller: _q, onChanged: (_) => setState(() {}),
             decoration: const InputDecoration(
               hintText: 'Search by name, company, skill, location...',
               prefixIcon: Icon(Icons.search, color: AppColors.primary)))),
         // Filter/sort bar
-        Container(color: Colors.white,
+        Container(color: AppColors.surface,
           padding: const EdgeInsets.fromLTRB(16, 4, 16, 10),
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -1432,7 +1432,7 @@ class NotificationsScreen extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
-                      color: n.read ? Colors.white : AppColors.primaryLight,
+                      color: n.read ? AppColors.surface : AppColors.primaryLight,
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
                         color: n.read ? AppColors.border : AppColors.primary.withOpacity(0.3))),
@@ -1590,6 +1590,7 @@ class _OrgVerifyScreenState extends State<OrgVerifyScreen> {
   Future<void> _send() async {
     setState(() { _sending = true; _error = null; });
     final r = await context.read<AppProvider>().sendOrgEmailOtp(_email.text.trim());
+    if (!mounted) return;
     setState(() { _sending = false; });
     if (r.success) setState(() => _otpSent = true);
     else setState(() => _error = r.error);
@@ -1599,6 +1600,7 @@ class _OrgVerifyScreenState extends State<OrgVerifyScreen> {
     setState(() { _verifying = true; _error = null; });
     final r = await context.read<AppProvider>()
         .verifyOrgEmailOtp(_email.text.trim(), _otp.text.trim());
+    if (!mounted) return;
     setState(() => _verifying = false);
     if (r.success) setState(() => _success = '${r.companyName ?? "Organisation"} verified. Your profile now shows the Org Verified badge.');
     else setState(() => _error = r.error);

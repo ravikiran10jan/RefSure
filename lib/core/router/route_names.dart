@@ -16,6 +16,7 @@ class RouteNames {
   static const String notifications = '/notifications';
   static const String verifyOrg = '/verify-org';
   static const String postJob = '/post-job';
+  static const String careersPortal = '/careers-portal';
 
   static String jobDetailPath(String id) => '/jobs/$id';
   static String providerDetailPath(String id) => '/providers/$id';

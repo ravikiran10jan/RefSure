@@ -33,6 +33,7 @@ dependencies:
   get_it: ^8.0.2
   injectable: ^2.5.0
   dartz: ^0.10.1
+  http: ^1.2.0
 
 dev_dependencies:
   flutter_test:

@@ -5,9 +5,11 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'core/di/injection.dart';
+import 'core/router/route_names.dart';
 import 'design_system/design_system.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/auth/presentation/screens/auth_screen.dart' as auth_feature;
+import 'features/careers_portal/careers_portal.dart';
 import 'providers/app_provider.dart';
 import 'screens/onboarding_screen.dart';
 import 'screens/main_screens.dart';
@@ -30,6 +32,13 @@ GoRouter buildRouter(AppProvider prov) => GoRouter(
     GoRoute(path: '/notifications', builder: (_, __) => const NotificationsScreen()),
     GoRoute(path: '/verify-org',  builder: (_, __) => const OrgVerifyScreen()),
     GoRoute(path: '/post-job',    builder: (_, __) => const PostJobScreen()),
+    GoRoute(
+      path: RouteNames.careersPortal,
+      builder: (_, __) => BlocProvider(
+        create: (_) => getIt<CareersPortalCubit>(),
+        child: const CareersPortalScreen(),
+      ),
+    ),
     GoRoute(path: '/edit-profile', builder: (_, __) => const _EditProfileScreen()),
     GoRoute(
       path: '/providers/:id',
@@ -115,14 +124,14 @@ class _ShellScaffold extends StatelessWidget {
       body: child,
       bottomNavigationBar: Container(
         decoration: const BoxDecoration(
-          color: Colors.white,
+          color: AppColors.surface,
           border: Border(top: BorderSide(color: AppColors.border))),
         child: BottomNavigationBar(
           currentIndex: index,
           onTap: (i) => context.go(routes[i]),
           type: BottomNavigationBarType.fixed,
           elevation: 0,
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.surface,
           selectedFontSize: 11,
           unselectedFontSize: 11,
           selectedItemColor: AppColors.primary,
@@ -235,7 +244,7 @@ class _EditProfileScreenState extends State<_EditProfileScreen> {
         if (isReferrer) ...[
           _EditVerifyEmailRow(
             verified: orgVerified,
-            onVerifyNow: () => context.push('/verify-org')),
+            onVerifyNow: () => context.push(RouteNames.verifyOrg)),
           const SizedBox(height: 18),
         ],
 

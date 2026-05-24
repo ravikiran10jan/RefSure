@@ -44,7 +44,7 @@ class _AuthScreenState extends State<AuthScreen>
       }
     },
     child: Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.bg,
       body: SafeArea(child: Column(children: [
         const SizedBox(height: 32),
         // Logo

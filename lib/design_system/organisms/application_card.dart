@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:refsure/core/models/application.dart';
 import 'package:refsure/core/models/job.dart';
+import 'package:refsure/core/router/route_names.dart';
 import 'package:refsure/design_system/atoms/status_pill.dart';
 import 'package:refsure/design_system/molecules/company_logo.dart';
 import 'package:refsure/design_system/molecules/match_band_pill.dart';
@@ -20,7 +21,7 @@ class ApplicationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SectionCard(
-    onTap: job != null ? () => context.push('/jobs/${job!.id}') : null,
+    onTap: job != null ? () => context.push(RouteNames.jobDetailPath(job!.id)) : null,
     child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Row(children: [
         if (job != null) ...[

@@ -5,45 +5,50 @@ import 'package:refsure/core/enums/enums.dart';
 
 /// Single source of truth for colour tokens.
 ///
-/// Palette:
-/// - Background: pure white surfaces with a faint neutral canvas.
-/// - Brand: light sea green for primary actions, accents, and badges.
-/// - Semantics: tuned to coexist with the sea-green brand on a light theme.
+/// Palette (Groww-inspired white & green):
+/// - Background: near-white page canvas with white card surfaces.
+/// - Brand: #00B386 teal-green for primary actions, accents, and badges.
+/// - Semantics: status, match-band, and work-mode colours tuned for the palette.
 class AppColors {
   // ── Brand ────────────────────────────────────────────────────
-  /// Light sea green — primary brand colour for buttons, links, accents.
-  static const primary      = Color(0xFF20B2AA);
+  /// Groww teal-green — primary brand colour for buttons, links, accents.
+  static const primary      = Color(0xFF00B386);
   /// Hover / pressed state for the primary colour.
-  static const primaryDark  = Color(0xFF178F88);
-  /// 8% tinted surface for selected chips, badges, and subtle highlights.
-  static const primaryLight = Color(0xFFE6F7F6);
-  /// Secondary accent — a deeper teal that pairs with the primary.
-  static const accent       = Color(0xFF0E7C7B);
-  static const accentLight  = Color(0xFFE0F2F1);
+  static const primaryDark  = Color(0xFF007A5E);
+  /// 8 % tinted surface for selected chips, badges, and subtle highlights.
+  static const primaryLight = Color(0xFFE8F7F2);
+  /// Secondary accent — darker teal that pairs with the primary.
+  static const accent       = Color(0xFF007A5E);
+  static const accentLight  = Color(0xFFE8F7F2);
 
   // ── Surface ──────────────────────────────────────────────────
-  /// App canvas. A near-white with the faintest cool tint so that white
-  /// cards still read as elevated.
-  static const bg           = Color(0xFFF7FAFA);
+  /// App canvas — faint green-tinted white so white cards read as elevated.
+  static const bg           = Color(0xFFF4FAF8);
   static const surface      = Colors.white;
-  static const surfaceHover = Color(0xFFF1F7F7);
-  static const border       = Color(0xFFE2E8E8);
-  static const divider      = Color(0xFFEBEFEF);
+  static const surfaceHover = Color(0xFFEBF6F1);
+  static const border       = Color(0xFFE0F0EB);
+  static const divider      = Color(0xFFE0F0EB);
 
   // ── Text ─────────────────────────────────────────────────────
-  static const textPrimary  = Color(0xFF1A2A2A);
+  static const textPrimary  = Color(0xFF2A2D32);
   static const textSecond   = Color(0xFF5C6B6B);
-  static const textHint     = Color(0xFF8A9999);
+  static const textHint     = Color(0xFF888888);
 
   // ── Semantic ─────────────────────────────────────────────────
-  static const emerald      = Color(0xFF0F8A6A);
-  static const emeraldLight = Color(0xFFE6F4EE);
-  static const amber        = Color(0xFFB45309);
-  static const amberLight   = Color(0xFFFEF3C7);
-  /// Informational tone — kept distinct from primary so banners stand out.
-  static const info         = Color(0xFF1F8CB7);
-  static const infoLight    = Color(0xFFE3F2F8);
-  static const red          = Color(0xFFC03A40);
+  /// Confirmed / success — same green family as the brand.
+  static const emerald      = Color(0xFF007A5E);
+  static const emeraldLight = Color(0xFFE8F7F2);
+  /// Pending / warning.
+  static const amber        = Color(0xFFC06000);
+  static const amberLight   = Color(0xFFFFF3E8);
+  /// Informational — blue tone kept distinct from the green brand.
+  static const info         = Color(0xFF2255CC);
+  static const infoLight    = Color(0xFFE8F0FF);
+  /// Alias used by VerifiedBadge and any "blue" semantic context.
+  static const blue         = info;
+  static const blueLight    = infoLight;
+  /// Error / decline.
+  static const red          = Color(0xFFE24B4A);
   static const redLight     = Color(0xFFFCEEEE);
   static const purple       = Color(0xFF6D5BD0);
   static const purpleLight  = Color(0xFFEFEBFA);

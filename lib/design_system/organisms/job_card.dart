@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:refsure/core/router/route_names.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:refsure/core/models/job.dart';
@@ -36,7 +37,7 @@ class JobCard extends StatelessWidget {
     final applied = prov.myApplications.any((a) => a.jobId == job.id);
 
     return SectionCard(
-      onTap: () => context.push('/jobs/${job.id}'),
+      onTap: () => context.push(RouteNames.jobDetailPath(job.id)),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         // Header
         Row(crossAxisAlignment: CrossAxisAlignment.start, children: [

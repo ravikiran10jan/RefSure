@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:refsure/features/applications/data/applications_repository.dart';
+import 'package:refsure/features/careers_portal/careers_portal.dart';
 import 'package:refsure/features/applications/presentation/cubit/applications_cubit.dart';
 import 'package:refsure/features/auth/data/auth_repository.dart';
 import 'package:refsure/features/auth/presentation/bloc/auth_bloc.dart';
@@ -18,8 +19,8 @@ import 'package:refsure/features/onboarding/presentation/cubit/onboarding_cubit.
 import 'package:refsure/features/profile/data/profile_repository.dart';
 import 'package:refsure/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:refsure/services/auth_service.dart';
+import 'package:refsure/services/careers_portal_service.dart';
 import 'package:refsure/services/firestore_service.dart';
-import 'package:refsure/services/match_engine.dart';
 import 'package:refsure/services/otp_service.dart';
 import 'package:refsure/services/storage_service.dart';
 
@@ -40,7 +41,7 @@ void configureDependencies() {
     ..registerLazySingleton<FirestoreService>(FirestoreService.new)
     ..registerLazySingleton<StorageService>(StorageService.new)
     ..registerLazySingleton<OtpService>(OtpService.new)
-    ..registerLazySingleton<MatchEngine>(MatchEngine.new)
+    ..registerLazySingleton<CareersPortalService>(CareersPortalService.new)
     // Repositories
     ..registerLazySingleton<AuthRepository>(
       () => AuthRepository(getIt<AuthService>()),
@@ -52,10 +53,7 @@ void configureDependencies() {
       ),
     )
     ..registerLazySingleton<JobsRepository>(
-      () => JobsRepository(
-        getIt<FirestoreService>(),
-        getIt<MatchEngine>(),
-      ),
+      () => JobsRepository(getIt<FirestoreService>()),
     )
     ..registerLazySingleton<ApplicationsRepository>(
       () => ApplicationsRepository(getIt<FirestoreService>()),
@@ -68,6 +66,12 @@ void configureDependencies() {
     )
     ..registerLazySingleton<DashboardRepository>(
       () => DashboardRepository(getIt<FirestoreService>()),
+    )
+    ..registerLazySingleton<CareersPortalRepository>(
+      () => CareersPortalRepository(
+        getIt<CareersPortalService>(),
+        getIt<JobsRepository>(),
+      ),
     )
     // BLoCs & Cubits
     ..registerFactory<AuthBloc>(
@@ -102,6 +106,11 @@ void configureDependencies() {
     ..registerFactory<OnboardingCubit>(
       () => OnboardingCubit(
         profileRepository: getIt<ProfileRepository>(),
+      ),
+    )
+    ..registerFactory<CareersPortalCubit>(
+      () => CareersPortalCubit(
+        repository: getIt<CareersPortalRepository>(),
       ),
     );
 }

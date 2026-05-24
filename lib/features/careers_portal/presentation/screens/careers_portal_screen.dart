@@ -217,7 +217,7 @@ class _CareersPortalScreenState extends State<CareersPortalScreen> {
             ),
             const SizedBox(height: 4),
             Text(
-              'We'll save this to your profile and fetch fresh listings.',
+              "We'll save this to your profile and fetch fresh listings.",
               style: GoogleFonts.inter(
                 fontSize: 13,
                 color: AppColors.textSecond,
@@ -346,10 +346,10 @@ class _CompanySetupPromptState extends State<_CompanySetupPrompt> {
 
             // Sub-copy
             Text(
-              'RefSure will auto-detect your company's careers portal '
-              '(Greenhouse, Lever, BambooHR, Workday and more) and '
-              'fetch open roles for you. You only need to set this once — '
-              'it's saved to your profile.',
+              "RefSure will auto-detect your company's careers portal "
+              "(Greenhouse, Lever, BambooHR, Workday and more) and "
+              "fetch open roles for you. You only need to set this once — "
+              "it's saved to your profile.",
               textAlign: TextAlign.center,
               style: GoogleFonts.inter(
                 fontSize: 13,
@@ -421,7 +421,7 @@ class _CompanySetupPromptState extends State<_CompanySetupPrompt> {
 
             // Small reassurance copy
             Text(
-              'Saved to your profile — you won't be asked again.',
+              "Saved to your profile — you won't be asked again.",
               style: GoogleFonts.inter(
                 fontSize: 11,
                 color: AppColors.textHint,

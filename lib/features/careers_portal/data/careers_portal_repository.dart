@@ -1,6 +1,7 @@
 // lib/features/careers_portal/data/careers_portal_repository.dart
 // ignore_for_file: require_trailing_commas
 
+import 'package:refsure/core/enums/enums.dart';
 import 'package:refsure/core/models/external_job.dart';
 import 'package:refsure/core/models/job.dart';
 import 'package:refsure/features/jobs/data/jobs_repository.dart';

@@ -151,7 +151,7 @@ class TestDataSeeder {
     for (var i = 0; i < leaderboard.length; i++) {
       batch5.set(
         db.collection('leaderboard')
-            .doc('lb_entry_\${(i + 1).toString().padLeft(3, '0')}'),
+            .doc("lb_entry_${(i + 1).toString().padLeft(3, '0')}"),
         leaderboard[i],
         SetOptions(merge: false),
       );

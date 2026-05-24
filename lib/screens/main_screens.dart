@@ -285,6 +285,30 @@ class _QuickActionTile extends StatelessWidget {
   );
 }
 
+class _QuickChip extends StatelessWidget {
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+  const _QuickChip(this.label, this.selected, this.onTap);
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.only(right: 8),
+    child: ChoiceChip(
+      label: Text(label),
+      selected: selected,
+      onSelected: (_) => onTap(),
+      selectedColor: AppColors.primaryLight,
+      backgroundColor: AppColors.surface,
+      side: BorderSide(color: selected ? AppColors.primary : AppColors.border),
+      labelStyle: GoogleFonts.inter(
+        fontSize: 12,
+        fontWeight: FontWeight.w500,
+        color: selected ? AppColors.primary : AppColors.textSecond,
+      ),
+    ),
+  );
+}
+
 class _EmptyMini extends StatelessWidget {
   final String text;
   const _EmptyMini({required this.text});

@@ -20,7 +20,13 @@ final _shellKey = GlobalKey<NavigatorState>(debugLabel: 'shell');
 GoRouter buildRouter(AppProvider prov) => GoRouter(
   refreshListenable: prov,
   redirect: (context, state) {
-    // GUEST MODE - no auth redirect
+    final isGuest = prov.isGuest;
+    final location = state.uri.path;
+
+    // Guest users land on the auth screen; authenticated users skip it.
+    if (isGuest && location != '/auth') return '/auth';
+    if (!isGuest && location == '/auth') return '/';
+
     return null;
   },
   routes: [
@@ -311,38 +317,42 @@ class _ResumeTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hasFile = fileName != null;
-    return GestureDetector(
-      onTap: uploading ? null : onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-        decoration: BoxDecoration(
-          color: hasFile ? AppColors.emeraldLight : Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: hasFile ? AppColors.emerald.withOpacity(0.4)
-                : AppColors.border)),
-        child: Row(children: [
-          if (uploading)
-            const SizedBox(width: 18, height: 18,
-              child: CircularProgressIndicator(strokeWidth: 2))
-          else
-            Icon(hasFile ? Icons.check_circle_outline : Icons.upload_file,
-              size: 20,
-              color: hasFile ? AppColors.emerald : AppColors.primary),
-          const SizedBox(width: 12),
-          Expanded(child: Text(
-            uploading
-                ? 'Uploading...'
-                : (fileName ?? 'Upload PDF or DOCX'),
-            style: GoogleFonts.inter(
-              fontSize: 14,
-              color: hasFile ? AppColors.emerald : AppColors.textPrimary,
-              fontWeight: FontWeight.w600))),
-          if (hasFile && !uploading)
-            Text('Replace', style: GoogleFonts.inter(
-              fontSize: 12, color: AppColors.primary,
-              fontWeight: FontWeight.w600)),
-        ]),
+    return Material(
+      color: hasFile ? AppColors.emeraldLight : Colors.white,
+      borderRadius: BorderRadius.circular(10),
+      child: InkWell(
+        onTap: uploading ? null : onTap,
+        borderRadius: BorderRadius.circular(10),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: hasFile ? AppColors.emerald.withOpacity(0.4)
+                  : AppColors.border)),
+          child: Row(children: [
+            if (uploading)
+              const SizedBox(width: 18, height: 18,
+                child: CircularProgressIndicator(strokeWidth: 2))
+            else
+              Icon(hasFile ? Icons.check_circle_outline : Icons.upload_file,
+                size: 20,
+                color: hasFile ? AppColors.emerald : AppColors.primary),
+            const SizedBox(width: 12),
+            Expanded(child: Text(
+              uploading
+                  ? 'Uploading...'
+                  : (fileName ?? 'Upload PDF or DOCX'),
+              style: GoogleFonts.inter(
+                fontSize: 14,
+                color: hasFile ? AppColors.emerald : AppColors.textPrimary,
+                fontWeight: FontWeight.w600))),
+            if (hasFile && !uploading)
+              Text('Replace', style: GoogleFonts.inter(
+                fontSize: 12, color: AppColors.primary,
+                fontWeight: FontWeight.w600)),
+          ]),
+        ),
       ),
     );
   }

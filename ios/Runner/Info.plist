@@ -62,6 +62,14 @@
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>RefSure saves photos to your library.</string>
 
+	<!-- Required for file_picker — document access -->
+	<key>NSDocumentsFolderUsageDescription</key>
+	<string>RefSure needs access to your documents to upload your CV.</string>
+	<key>UIFileSharingEnabled</key>
+	<true/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<true/>
+
 	<!-- Allow HTTP in development (remove for production) -->
 	<key>NSAppTransportSecurity</key>
 	<dict>

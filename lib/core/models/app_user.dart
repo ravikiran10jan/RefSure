@@ -97,9 +97,12 @@ class AppUser {
     if (orgVerified) s += 30;
     if (verified)    s += 20;
     if (profileComplete >= 80) s += 15;
-    s += (successRate / 100) * 20;
     if (responseRate >= 0.8) s += 10;
+    // Referral volume (replaces success rate)
     if (referralsMade >= 5)  s += 5;
+    if (referralsMade >= 10) s += 5;
+    if (referralsMade >= 20) s += 5;
+    if (referralsMade >= 30) s += 5;
     return s.clamp(0, 100);
   }
 

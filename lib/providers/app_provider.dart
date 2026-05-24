@@ -2,6 +2,8 @@
 // ignore_for_file: argument_type_not_assignable, require_trailing_commas
 import 'dart:async';
 import 'package:flutter/foundation.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../core/utils/test_data_seeder.dart';
 import '../models/models.dart';
 import '../services/auth_service.dart';
 import '../services/firestore_service.dart';
@@ -41,6 +43,11 @@ class AppProvider extends ChangeNotifier {
   bool      get isProvider   => _activeRole == UserRole.provider;
   UserRole  get activeRole   => _activeRole;
   JobFilter get jobFilter    => _jobFilter;
+
+  /// True when the Firebase user is anonymous (guest / not properly
+  /// authenticated). Real email/password or Google users are not guests.
+  bool get isGuest =>
+      _auth.currentFirebaseUser?.isAnonymous ?? true;
 
   List<AppUser>         get providers           => _providers;
   List<AppUser>         get seekers             => _seekers;
@@ -152,18 +159,35 @@ class AppProvider extends ChangeNotifier {
   void _init() {
     _subs.add(_auth.authStateChanges.listen((firebaseUser) async {
       if (firebaseUser == null) {
-        _currentUser = null;
-        _authReady = true;
-        _providers = [];
-        _seekers = [];
-        _jobs = [];
-        _myApps = [];
-        _providerApps = [];
-        _notifs = [];
-        _gratitudes = [];
-        notifyListeners();
+        // Auto anonymous sign-in for demo / dev mode
+        final anon = await _auth.signInAnonymously();
+        if (!anon.success) {
+          _currentUser = null;
+          _authReady = true;
+          notifyListeners();
+        }
         return;
       }
+
+      // Ensure user doc exists (for anonymous or new users)
+      final existing = await _db.getUser(firebaseUser.uid);
+      if (existing == null) {
+        final dummyUser = AppUser(
+          id: firebaseUser.uid,
+          role: UserRole.seeker,
+          name: 'Demo Seeker',
+          headline: 'Job Seeker at RefSure',
+          title: 'Software Engineer',
+          location: 'Bangalore',
+          experience: 3,
+          skills: const ['Flutter', 'Dart', 'Firebase'],
+          bio: 'Demo profile for testing RefSure.',
+          email: firebaseUser.email ?? 'demo@refsure.com',
+          profileComplete: 50,
+        );
+        await _db.saveUser(dummyUser);
+      }
+
       await _loadUserData(firebaseUser.uid);
     }));
   }
@@ -221,6 +245,11 @@ class AppProvider extends ChangeNotifier {
       notifyListeners();
       // Seed jobs if none exist
       _db.seedSampleJobs();
+      // Auto-seed full test dataset (idempotent — safe to run every launch)
+      unawaited(TestDataSeeder.seed(
+        FirebaseFirestore.instance,
+        currentUserId: uid,
+      ).catchError((_) {}));
     } catch (e) {
       _error = e.toString();
       _loading = false;

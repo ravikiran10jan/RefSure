@@ -40,7 +40,7 @@ android {
 
     defaultConfig {
         applicationId "com.refsure.app"
-        minSdkVersion 21          // Firebase requires 21+
+        minSdkVersion flutter.minSdkVersion          // Firebase requires 21+
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import '../models/models.dart';
 import '../providers/app_provider.dart';
+import '../services/tour_service.dart';
 import '../utils/theme.dart';
 import '../widgets/common.dart';
 import '../widgets/cards.dart';
@@ -61,6 +62,14 @@ class HomeScreen extends StatelessWidget {
 
         SliverPadding(padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
           sliver: SliverList(delegate: SliverChildListDelegate([
+
+            // ── Welcome Banner ─────────────────────────────
+            _WelcomeBanner(name: user.name.split(' ').first),
+            const SizedBox(height: 14),
+
+            // ── App Tour ───────────────────────────────────
+            const _AppTourCard(),
+            const SizedBox(height: 16),
 
             // ── Search ─────────────────────────────────────
             _SearchBar(onTap: () => context.push('/jobs')),
@@ -138,6 +147,221 @@ class _ProfileMissingState extends StatelessWidget {
         onPressed: () => context.go('/onboarding'),
         child: const Text('Complete Profile Setup')),
     ])));
+}
+
+// ── Welcome Banner ─────────────────────────────────────────────
+class _WelcomeBanner extends StatelessWidget {
+  final String name;
+  const _WelcomeBanner({required this.name});
+
+  @override
+  Widget build(BuildContext context) => Container(
+    padding: const EdgeInsets.fromLTRB(18, 16, 18, 16),
+    decoration: BoxDecoration(
+      gradient: const LinearGradient(
+        colors: [AppColors.primary, AppColors.accent],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ),
+      borderRadius: BorderRadius.circular(14),
+      boxShadow: [
+        BoxShadow(
+          color: AppColors.primary.withOpacity(0.25),
+          blurRadius: 12, offset: const Offset(0, 4)),
+      ],
+    ),
+    child: Row(children: [
+      Expanded(child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Welcome, $name!',
+            style: GoogleFonts.inter(
+              fontSize: 17, fontWeight: FontWeight.w800, color: Colors.white)),
+          const SizedBox(height: 4),
+          Text('Ready to find your next opportunity?',
+            style: GoogleFonts.inter(
+              fontSize: 13, color: Colors.white.withOpacity(0.9))),
+        ],
+      )),
+      Container(
+        width: 44, height: 44,
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.2),
+          shape: BoxShape.circle,
+        ),
+        alignment: Alignment.center,
+        child: const Icon(Icons.waving_hand, color: Colors.white, size: 22)),
+    ]),
+  );
+}
+
+// ── App Tour ───────────────────────────────────────────────────
+class _AppTourCard extends StatefulWidget {
+  const _AppTourCard();
+  @override
+  State<_AppTourCard> createState() => _AppTourCardState();
+}
+
+class _AppTourCardState extends State<_AppTourCard> {
+  final _pageCtrl = PageController();
+  int _page = 0;
+  bool? _seen;
+
+  static const _slides = [
+    _TourSlide(
+      icon: Icons.work_outline,
+      title: 'Browse Jobs',
+      body: 'Search and filter openings posted by verified insiders.',
+      color: AppColors.primary,
+    ),
+    _TourSlide(
+      icon: Icons.people_outline,
+      title: 'Find Referrers',
+      body: 'Connect with employees who can refer you to your dream role.',
+      color: AppColors.emerald,
+    ),
+    _TourSlide(
+      icon: Icons.psychology_outlined,
+      title: 'Apply Smart',
+      body: 'Check your AI match score before applying to any job.',
+      color: AppColors.info,
+    ),
+    _TourSlide(
+      icon: Icons.track_changes_outlined,
+      title: 'Track Progress',
+      body: 'Follow every step of your application, from apply to hire.',
+      color: AppColors.purple,
+    ),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _checkSeen();
+  }
+
+  @override
+  void dispose() { _pageCtrl.dispose(); super.dispose(); }
+
+  Future<void> _checkSeen() async {
+    final seen = await TourService.hasSeenTour();
+    if (mounted) setState(() => _seen = seen);
+  }
+
+  Future<void> _dismiss() async {
+    await TourService.markTourSeen();
+    if (mounted) setState(() => _seen = true);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_seen == null || _seen == true) return const SizedBox.shrink();
+
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.border),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primary.withOpacity(0.06),
+            blurRadius: 10, offset: const Offset(0, 3)),
+        ],
+      ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Row(children: [
+          Text('App Tour',
+            style: GoogleFonts.inter(
+              fontSize: 14, fontWeight: FontWeight.w700)),
+          const Spacer(),
+          TextButton(
+            onPressed: _dismiss,
+            style: TextButton.styleFrom(
+              padding: EdgeInsets.zero,
+              minimumSize: const Size(40, 30),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+            child: Text('Skip',
+              style: GoogleFonts.inter(
+                fontSize: 12, fontWeight: FontWeight.w600))),
+        ]),
+        const SizedBox(height: 10),
+        SizedBox(
+          height: 110,
+          child: PageView.builder(
+            controller: _pageCtrl,
+            onPageChanged: (i) => setState(() => _page = i),
+            itemCount: _slides.length,
+            itemBuilder: (_, i) => _slides[i],
+          ),
+        ),
+        const SizedBox(height: 10),
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          for (int i = 0; i < _slides.length; i++)
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              margin: const EdgeInsets.symmetric(horizontal: 3),
+              width: _page == i ? 18 : 6,
+              height: 6,
+              decoration: BoxDecoration(
+                color: _page == i ? AppColors.primary : AppColors.border,
+                borderRadius: BorderRadius.circular(3),
+              ),
+            ),
+        ]),
+        if (_page == _slides.length - 1) ...[
+          const SizedBox(height: 10),
+          Align(
+            alignment: Alignment.centerRight,
+            child: FilledButton(
+              onPressed: _dismiss,
+              style: FilledButton.styleFrom(
+                minimumSize: const Size(100, 36),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              ),
+              child: const Text('Got it')),
+          ),
+        ],
+      ]),
+    );
+  }
+}
+
+class _TourSlide extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String body;
+  final Color color;
+  const _TourSlide({
+    required this.icon, required this.title, required this.body, required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) => Row(children: [
+    Container(
+      width: 52, height: 52,
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(14),
+      ),
+      alignment: Alignment.center,
+      child: Icon(icon, color: color, size: 26),
+    ),
+    const SizedBox(width: 14),
+    Expanded(child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(title, style: GoogleFonts.inter(
+          fontSize: 15, fontWeight: FontWeight.w700)),
+        const SizedBox(height: 4),
+        Text(body, style: GoogleFonts.inter(
+          fontSize: 13, color: AppColors.textSecond, height: 1.4)),
+      ],
+    )),
+  ]);
 }
 
 class _SearchBar extends StatelessWidget {

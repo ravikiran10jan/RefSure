@@ -129,6 +129,17 @@ class AuthService {
     }
   }
 
+  // ── Anonymous sign-in (demo mode) ──────────────────────────
+
+  Future<AuthResult> signInAnonymously() async {
+    try {
+      final credential = await _auth.signInAnonymously();
+      return AuthResult(success: true, uid: credential.user?.uid);
+    } on FirebaseAuthException catch (e) {
+      return AuthResult(success: false, error: _authError(e.code));
+    }
+  }
+
   // ── Password reset ─────────────────────────────────────────
 
   Future<AuthResult> sendPasswordReset(String email) async {
